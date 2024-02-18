@@ -9,7 +9,7 @@ const ErrorPage = ({
   console.log("Error::", error.digest);
   console.log("Error::", error.message);
 
-  return <text>Something wen wrong....</text>;
+  return <text>Something went wrong....</text>;
 };
 
 export default ErrorPage;
