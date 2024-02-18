@@ -6,7 +6,7 @@ const ErrorPage = ({
   error: Error & { digest?: string };
   reset: () => void;
 }) => {
-  console.log("Error::", error);
+  console.log("Error::", error.digest);
 
   return <text>Something wen wrong....</text>;
 };
