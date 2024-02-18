@@ -12,6 +12,8 @@ interface ProductProps {
   params: { id: string };
 }
 
+console.log("hello world", prisma);
+
 const getProduct = cache(async (id: string) => {
   const product = await prisma.products.findUnique({ where: { id } });
   if (!product) notFound();
