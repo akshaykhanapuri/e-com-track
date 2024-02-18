@@ -32,7 +32,6 @@ const getProduct = cache(async (id: string) => {
 // }
 
 const Product = async ({ params }: ProductProps) => {
-  console.log("test", typeof prisma);
   const product = await getProduct(params.id);
   return (
     <>
