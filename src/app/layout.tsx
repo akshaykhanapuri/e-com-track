@@ -5,6 +5,7 @@ import "./globals.css";
 import Navbar from "./Navbar/Navbar";
 import Footer from "./Footer";
 import SessionProvider from "@/app/SessionProvider";
+import Analytics from "@/components/Analytics";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -25,6 +26,7 @@ export default function RootLayout({
       </head>
       <body className={inter.className}>
         <SessionProvider>
+          <Analytics />
           <Navbar />
           <main className="p-4 m-auto max-w-7xl min-w-[300px]">{children}</main>
           <Footer></Footer>

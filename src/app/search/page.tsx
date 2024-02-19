@@ -1,6 +1,7 @@
 import React from "react";
 import prisma from "@/lib/db/prisma";
 import ProductCard from "@/components/ProductCard";
+import AnalyticsProductsSearched from "@/components/AnalyticsProductsSearched";
 
 interface SearchPageProps {
   searchParams: { query: string };
@@ -18,11 +19,17 @@ const SearchPage = async ({ searchParams }: SearchPageProps) => {
   });
 
   if (products.length === 0) {
-    return <div className="text-center">No products found</div>;
+    return (
+      <>
+        <AnalyticsProductsSearched query={searchParams.query} />
+        <div className="text-center">No products found</div>
+      </>
+    );
   }
 
   return (
     <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+      <AnalyticsProductsSearched query={searchParams.query} />
       {products.map((product) => (
         <ProductCard product={product} key={product.id} />
       ))}

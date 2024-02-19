@@ -1,14 +1,26 @@
 "use client";
 import React, { useState, useTransition } from "react";
+import { ShoppingCart } from "@/lib/db/cart";
+import { analytics } from "@/lib/segment/segment";
 
 interface AddToCartButtonProps {
-  productId: string;
+  product: {
+    id: string;
+    description: string;
+    name: string;
+    imageUrl: string;
+    price: number;
+    createdAt: Date;
+    updatedAt: Date;
+  };
   incrementProductQuantity: (productId: string) => Promise<void>;
+  getCart: () => Promise<ShoppingCart | null>;
 }
 
 const AddToCartButton = ({
-  productId,
+  product,
   incrementProductQuantity,
+  getCart,
 }: AddToCartButtonProps) => {
   const [isPending, startTransition] = useTransition();
   const [success, setSuccess] = useState(false);
@@ -19,7 +31,19 @@ const AddToCartButton = ({
         onClick={() => {
           setSuccess(false);
           startTransition(async () => {
-            await incrementProductQuantity(productId);
+            await incrementProductQuantity(product.id);
+            const cart = await getCart();
+            analytics.track("Product Added", {
+              cart_id: cart?.id,
+              product_id: product.id,
+              name: product.name,
+              price: product.price,
+              url: window.location.href,
+              image_url: product.imageUrl,
+              currency: "usd",
+              quantity: 1,
+            });
+
             setSuccess(true);
           });
         }}

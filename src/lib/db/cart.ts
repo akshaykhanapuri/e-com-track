@@ -1,3 +1,4 @@
+"use server";
 import { cookies } from "next/headers";
 import prisma from "./prisma";
 import { CartItems, Carts, Prisma } from "@prisma/client";

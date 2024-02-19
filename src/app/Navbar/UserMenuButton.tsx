@@ -1,16 +1,26 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { Session } from "next-auth";
 import Image from "next/image";
 import profilePicPlaceholder from "@/assets/profile-pic-placeholder.png";
 import { signIn, signOut } from "next-auth/react";
+import { analytics } from "@/lib/segment/segment";
 
 interface UserMenuButtonProps {
   session: Session | null;
 }
 
 const UserMenuButton = ({ session }: UserMenuButtonProps) => {
+  useEffect(() => {
+    if (session?.user) {
+      analytics.identify(session.user.id, {
+        name: session.user.name,
+        email: session.user.email,
+      });
+    }
+  }, [session]);
+
   const user = session?.user;
   return (
     <div className="dropdown dropdown-end">
@@ -45,7 +55,12 @@ const UserMenuButton = ({ session }: UserMenuButtonProps) => {
       >
         <li>
           {user ? (
-            <button onClick={() => signOut({ callbackUrl: "/" })}>
+            <button
+              onClick={() => {
+                signOut({ callbackUrl: "/" });
+                analytics.reset();
+              }}
+            >
               Sign Out
             </button>
           ) : (

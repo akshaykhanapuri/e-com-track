@@ -43,7 +43,7 @@ const ShoppingCartButton = ({ cart }: ShoppingCartButtonProps) => {
       >
         <div className="card body">
           <span className="text-lg font-bold">{cart?.size || 0} Items</span>
-          <span className="text-info">Subtotal: ${cart?.subtotal || 0}</span>
+          <span className="text-black">Subtotal: ${cart?.subtotal || 0}</span>
           <div className="card-actions">
             <Link
               href="/cart"

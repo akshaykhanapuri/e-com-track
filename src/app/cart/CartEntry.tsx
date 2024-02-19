@@ -3,8 +3,8 @@ import React, { useTransition } from "react";
 import { CartItemWithProduct } from "@/lib/db/cart";
 import Image from "next/image";
 import Link from "next/link";
-import { start } from "repl";
 import { setProductQuantity } from "./actions";
+import { analytics } from "@/lib/segment/segment";
 
 interface CartEntryProps {
   cartItem: CartItemWithProduct;
@@ -44,8 +44,34 @@ const CartEntry = ({ cartItem }: CartEntryProps) => {
               defaultValue={cartItem.quantity}
               onChange={(e) => {
                 const newQuantity = parseInt(e.currentTarget.value);
+                if (newQuantity < cartItem.quantity) {
+                  analytics.track("Product Removed", {
+                    cart_id: cartItem.cartId,
+                    product_id: cartItem.product.id,
+                    name: cartItem.product.name,
+                    price:
+                      (cartItem.quantity - newQuantity) *
+                      cartItem.product.price,
+                    url: window.location.href,
+                    image_url: cartItem.product.imageUrl,
+                    currency: "usd",
+                    quantity: cartItem.quantity - newQuantity,
+                  });
+                } else if (newQuantity > cartItem.quantity) {
+                  analytics.track("Product Added", {
+                    cart_id: cartItem.cartId,
+                    product_id: cartItem.product.id,
+                    name: cartItem.product.name,
+                    price:
+                      (newQuantity - cartItem.quantity) *
+                      cartItem.product.price,
+                    url: window.location.href,
+                    image_url: cartItem.product.imageUrl,
+                    currency: "usd",
+                    quantity: newQuantity - cartItem.quantity,
+                  });
+                }
                 startTransition(async () => {
-                  console.log("hello", newQuantity);
                   await setProductQuantity(cartItem.product.id, newQuantity);
                 });
               }}
