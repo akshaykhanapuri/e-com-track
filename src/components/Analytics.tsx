@@ -8,7 +8,7 @@ const Analytics = () => {
   const pathname = usePathname();
 
   useEffect(() => {
-    analytics.page();
+    analytics.page(pathname);
   }, [pathname]);
   return null;
 };
